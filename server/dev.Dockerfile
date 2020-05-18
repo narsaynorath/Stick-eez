@@ -7,6 +7,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-ENV FLASK_APP=app.py FLASK_ENV=development
+ENV FLASK_APP=keep_clone.py FLASK_ENV=development
 
 CMD ["flask", "run", "--host=0.0.0.0"]
