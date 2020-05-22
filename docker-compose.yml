@@ -17,6 +17,17 @@ services:
       POSTGRES_HOST: db
     entrypoint: ./wait-for-it.sh db:5432 -- ./entrypoint.sh
 
+  frontend:
+    build:
+      context: ./client
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./client:/app
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+
   db:
     image: postgres:11
     environment:
