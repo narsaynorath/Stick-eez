@@ -2,7 +2,7 @@ from flask import flash, redirect, render_template, url_for
 
 from app import app, db
 from app.forms import NoteForm
-from app.models import Note
+from app.models import Note, User
 
 
 @app.route('/')
@@ -21,7 +21,8 @@ def add_new_note():
     form = NoteForm()
     if form.validate_on_submit():
         flash(f"New note added from {form.author.data}")
-        new_note = Note(user=form.author.data, title=form.title.data, text=form.text.data)
+        author = User.query.filter(User.username == form.author.data).one()
+        new_note = Note(author=author.id, title=form.title.data, text=form.text.data)
         db.session.add(new_note)
         db.session.commit()
         return redirect(url_for("notes_list"))

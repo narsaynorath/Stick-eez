@@ -6,7 +6,7 @@
   <ul>
     {% for note in notes %}
     <li>{{ note.title }}: {{ note.text }}</li>
-      <ul><li>Author: {{ note.user }}</li></ul>
+      <ul><li>Author: {{ note.author }}</li></ul>
     {% endfor %}
   </ul>
   {% else %}
