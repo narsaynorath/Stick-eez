@@ -46,9 +46,8 @@ def notes_list():
 def add_new_note():
     form = NoteForm()
     if form.validate_on_submit():
-        flash(f"New note added from {form.author.data}")
-        author = User.query.filter_by(username=form.author.data).one()
-        new_note = Note(author=author.id, title=form.title.data, text=form.text.data)
+        flash(f"New note added from {current_user.username}")
+        new_note = Note(author=current_user.id, title=form.title.data, text=form.text.data)
         db.session.add(new_note)
         db.session.commit()
         return redirect(url_for("notes_list"))
