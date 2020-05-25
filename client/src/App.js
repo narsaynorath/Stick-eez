@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 const drawerWidth = 240;
@@ -94,9 +95,11 @@ function App() {
         position="fixed"
         className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
-          <IconButton onClick={toggleDrawerOpen}>
-            <MenuIcon />
-          </IconButton>
+          <Tooltip title="Main Menu" enterDelay={500} enterNextDelay={300}>
+            <IconButton onClick={toggleDrawerOpen}>
+              <MenuIcon />
+            </IconButton>
+          </Tooltip>
           <DescriptionIcon className={classes.logo} />
           <Typography variant="h6">
             Stick-eez
@@ -122,7 +125,7 @@ function App() {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            {['Notes', 'Starred', 'Archived', 'Trash'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <MenuIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText primary={text} />
