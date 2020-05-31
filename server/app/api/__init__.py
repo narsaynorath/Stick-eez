@@ -3,9 +3,10 @@ from flask import g
 from app import api_manager, auth
 from app.models import User
 
-from .notes import Notes
+from .notes import Note, Notes
 
 api_manager.add_resource(Notes, '/api/v1/notes/')
+api_manager.add_resource(Note, '/api/v1/notes/<int:id>/')
 
 @auth.verify_password
 def verify_password(username, password):
