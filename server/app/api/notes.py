@@ -1,7 +1,8 @@
-from flask import flash, redirect, render_template, url_for
+from flask import flash, g, redirect, render_template, url_for
 from flask_login import current_user, login_user, logout_user
+from flask_restful import Resource, fields, marshal_with
 
-from app import app, db
+from app import api_manager, app, auth, db
 from app.forms import LoginForm, NoteForm
 from app.models import Note, User
 
@@ -21,7 +22,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
+        if user and user.verify_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect(url_for("notes_list"))
 
@@ -36,12 +37,6 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route('/notes/')
-def notes_list():
-    notes = Note.query.filter_by(author=current_user.id)
-    return render_template("notes_list.html", title="Notes", notes=notes)
-
-
 @app.route('/notes/add/', methods=['GET', 'POST'])
 def add_new_note():
     form = NoteForm()
@@ -52,3 +47,24 @@ def add_new_note():
         db.session.commit()
         return redirect(url_for("notes_list"))
     return render_template("new_notes_form.html", title="Add Note", form=form)
+
+
+class NotesDao:
+    def __init__(self, author, title, text):
+        self.author = author
+        self.title = title
+        self.text = text
+
+class Notes(Resource):
+
+    resource_fields = {
+        'author': fields.Integer,
+        'title': fields.String,
+        'text': fields.String
+    }
+
+    @auth.login_required
+    @marshal_with(resource_fields)
+    def get(self):
+        notes = Note.query.filter_by(author=g.user.id)
+        return [NotesDao(n.author, n.title, n.text) for n in notes]
