@@ -3,49 +3,6 @@ from flask_login import current_user, login_user, logout_user
 from flask_restful import Resource, fields, marshal_with, reqparse
 
 from app import api_manager, app, auth, db, models
-from app.forms import LoginForm, NoteForm
-
-
-@app.route('/')
-def home():
-    if not current_user.is_authenticated:
-        return redirect(url_for("login"))
-    return render_template("base.html")
-
-
-@app.route('/login/', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('notes_list'))
-
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = models.User.query.filter_by(username=form.username.data).first()
-        if user and user.verify_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
-            return redirect(url_for("notes_list"))
-
-        flash('Invalid username or password')
-        return redirect(url_for('login'))
-    return render_template("login_form.html", title="Login", form=form)
-
-
-@app.route('/logout/')
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
-
-
-@app.route('/notes/add/', methods=['GET', 'POST'])
-def add_new_note():
-    form = NoteForm()
-    if form.validate_on_submit():
-        flash(f"New note added from {current_user.username}")
-        new_note = models.Note(author=current_user.id, title=form.title.data, text=form.text.data)
-        db.session.add(new_note)
-        db.session.commit()
-        return redirect(url_for("notes_list"))
-    return render_template("new_notes_form.html", title="Add Note", form=form)
 
 
 class NoteDao:
@@ -54,6 +11,7 @@ class NoteDao:
         self.author = author
         self.title = title
         self.text = text
+
 
 class Notes(Resource):
 
@@ -71,8 +29,19 @@ class Notes(Resource):
         return [NoteDao(n.id, n.author, n.title, n.text) for n in notes]
 
     @auth.login_required
+    @marshal_with(resource_fields)
     def post(self):
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument('title', required=True)
+        parser.add_argument('text')
+        args = parser.parse_args()
+
+        new_note = models.Note(author=g.user.id)
+        new_note.text = args.get('text', '')
+        new_note.title = args.get('title', '')
+        db.session.add(new_note)
+        db.session.commit()
+        return new_note
 
 
 class Note(Resource):
@@ -102,4 +71,13 @@ class Note(Resource):
         note.title = args.get('title', note.title)
         db.session.add(note)
         db.session.commit()
+        return note
+
+    @auth.login_required
+    @marshal_with(resource_fields)
+    def delete(self, id):
+        note = models.Note.query.filter_by(id=id).first()
+        db.session.delete(note)
+        db.session.commit()
+        # TODO: What do you return on delete?
         return note

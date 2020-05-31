@@ -16,11 +16,3 @@ api_manager = Api(app)
 auth = HTTPBasicAuth()
 
 from app import api, models
-
-# @auth.verify_password
-# def verify_password(username, password):
-#     user = models.User.query.filter_by(username = username).first()
-#     if not user or not user.verify_password(password):
-#         return False
-#     g.user = user
-#     return True
