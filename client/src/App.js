@@ -21,7 +21,7 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
+    display: 'flex'
   },
   appBar: {
     color: '#5f6368',
@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
     boxShadow: 'none',
     borderBottom: '1px solid lightgray'
   },
+  appBarSpacer: theme.mixins.toolbar,
   toolbar: {
     paddingLeft: '4px'
   },
@@ -68,6 +69,14 @@ const useStyles = makeStyles(theme => ({
     width: '36px',
     color: 'rgb(244, 181, 6)',
     marginRight: '4px',
+  },
+  content: {
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto'
+  },
+  contentMain: {
+    padding: '32px'
   }
 }));
 
@@ -134,6 +143,14 @@ function App() {
           </List>
         </div>
       </Drawer>
+
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <div className={classes.contentMain}>
+          Some content that is really long so I can make a point
+        </div>
+      </main>
+
     </div>
   );
 }
