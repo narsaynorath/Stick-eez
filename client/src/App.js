@@ -1,26 +1,26 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import { makeStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-import Drawer from "./components/Drawer";
-import MainToolbar from "./components/MainToolbar";
+import Drawer from './components/Drawer';
+import MainToolbar from './components/MainToolbar';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    display: "flex",
+    display: 'flex',
   },
   appBarSpacer: theme.mixins.toolbar,
   toolbar: {
-    paddingLeft: "4px",
+    paddingLeft: '4px',
   },
   content: {
     flexGrow: 1,
-    height: "100vh",
-    overflow: "auto",
+    height: '100vh',
+    overflow: 'auto',
   },
   contentMain: {
-    padding: "32px",
+    padding: '32px',
   },
 }));
 
@@ -29,14 +29,14 @@ function App() {
   const [clickedOpen, setClickedOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const toggleDrawer = (e) => {
+  const toggleDrawer = e => {
     // Persist the drawer if clicked open, else toggle on mouse enter and exit
-    if (e.type === "click") {
+    if (e.type === 'click') {
       setClickedOpen(!clickedOpen);
       setDrawerOpen(!drawerOpen);
-    } else if (e.type === "mouseenter" && !clickedOpen) {
+    } else if (e.type === 'mouseenter' && !clickedOpen) {
       setDrawerOpen(true);
-    } else if (e.type === "mouseleave" && !clickedOpen) {
+    } else if (e.type === 'mouseleave' && !clickedOpen) {
       setDrawerOpen(false);
     }
   };
