@@ -1,38 +1,38 @@
-import React from 'react';
-import clsx from 'clsx';
+import React from "react";
+import clsx from "clsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import MUIDrawer from '@material-ui/core/Drawer';
-import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import MailIcon from "@material-ui/icons/Mail";
+import MenuIcon from "@material-ui/icons/Menu";
+import MUIDrawer from "@material-ui/core/Drawer";
+import Toolbar from "@material-ui/core/Toolbar";
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
   },
   open: {
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   close: {
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflowX: 'hidden',
+    overflowX: "hidden",
     width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: theme.spacing(9) + 1,
     },
   },
@@ -40,10 +40,10 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth,
   },
   drawerContainer: {
-    overflow: 'auto',
-    overflowX: 'hidden',
-    whiteSpace: 'nowrap'
-  }
+    overflow: "auto",
+    overflowX: "hidden",
+    whiteSpace: "nowrap",
+  },
 }));
 
 const Drawer = ({ open, toggleDrawer }) => {
@@ -67,9 +67,11 @@ const Drawer = ({ open, toggleDrawer }) => {
       <Toolbar />
       <div className={classes.drawerContainer}>
         <List>
-          {['Notes', 'Starred', 'Archived', 'Trash'].map((text, index) => (
+          {["Notes", "Starred", "Archived", "Trash"].map((text, index) => (
             <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <MenuIcon /> : <MailIcon />}</ListItemIcon>
+              <ListItemIcon>
+                {index % 2 === 0 ? <MenuIcon /> : <MailIcon />}
+              </ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
           ))}
