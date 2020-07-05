@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { Switch, Route, Redirect } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -29,7 +31,24 @@ function App() {
   const [clickedOpen, setClickedOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const toggleDrawer = e => {
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <MainToolbar toggleDrawer={toggleDrawer} />
+
+      <NavDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+
+      <Switch>
+        <Route path="/" exact component={Main} />
+        <Route path="/starred" component={Starred} />
+        <Route path="/archived" component={Archived} />
+        <Route path="/trash" component={Trash} />
+        <Redirect to="/" />
+      </Switch>
+    </div>
+  );
+
+  function toggleDrawer(e) {
     // Persist the drawer if clicked open, else toggle on mouse enter and exit
     if (e.type === 'click') {
       setClickedOpen(!clickedOpen);
@@ -39,23 +58,46 @@ function App() {
     } else if (e.type === 'mouseleave' && !clickedOpen) {
       setDrawerOpen(false);
     }
-  };
+  }
 
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <MainToolbar toggleDrawer={toggleDrawer} />
-
-      <NavDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
-
+  // TODO Break these out into components
+  function Main() {
+    return (
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <div className={classes.contentMain}>
           Some content that is really long so I can make a point
         </div>
       </main>
-    </div>
-  );
+    );
+  }
+
+  function Starred() {
+    return (
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <div className={classes.contentMain}>Starred content!!!</div>
+      </main>
+    );
+  }
+
+  function Archived() {
+    return (
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <div className={classes.contentMain}>Archived Content!</div>
+      </main>
+    );
+  }
+
+  function Trash() {
+    return (
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <div className={classes.contentMain}>Sendit</div>
+      </main>
+    );
+  }
 }
 
 export default App;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
+import { makeStyles } from '@material-ui/core/styles';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -34,7 +35,15 @@ const navItems = [
   },
 ];
 
+const useStyles = makeStyles(theme => ({
+  listItem: {
+    backgroundColor: 'inherit',
+  },
+}));
+
 const NavList = () => {
+  const classes = useStyles();
+
   return (
     <List>
       {navItems.map(({ path, exact, text, icon: Icon }) => (
@@ -43,10 +52,10 @@ const NavList = () => {
           to={path}
           style={{ color: 'inherit', textDecoration: 'none' }}
           activeStyle={{
-            color: 'green',
+            backgroundColor: 'rgba(244, 181, 6, 0.5)',
           }}
         >
-          <ListItem button key={text}>
+          <ListItem key={text} className={classes.listItem}>
             <ListItemIcon>
               <Icon />
             </ListItemIcon>
