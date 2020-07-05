@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import Drawer from './components/Drawer';
+import NavDrawer from './components/NavDrawer';
 import MainToolbar from './components/MainToolbar';
 
 const useStyles = makeStyles(theme => ({
@@ -46,7 +46,7 @@ function App() {
       <CssBaseline />
       <MainToolbar toggleDrawer={toggleDrawer} />
 
-      <Drawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+      <NavDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
 
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

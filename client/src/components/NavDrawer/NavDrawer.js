@@ -2,14 +2,10 @@ import React from 'react';
 import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
 import MUIDrawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
+
+import NavList from './NavList';
 
 const drawerWidth = 240;
 
@@ -46,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Drawer = ({ open, toggleDrawer }) => {
+const NavDrawer = ({ open, toggleDrawer }) => {
   const classes = useStyles();
   return (
     <MUIDrawer
@@ -65,20 +61,12 @@ const Drawer = ({ open, toggleDrawer }) => {
       onMouseLeave={toggleDrawer}
     >
       <Toolbar />
+
       <div className={classes.drawerContainer}>
-        <List>
-          {['Notes', 'Starred', 'Archived', 'Trash'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <MenuIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+        <NavList />
       </div>
     </MUIDrawer>
   );
 };
 
-export default Drawer;
+export default NavDrawer;
