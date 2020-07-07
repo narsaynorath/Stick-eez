@@ -38,6 +38,9 @@ const navItems = [
 const useStyles = makeStyles(theme => ({
   listItem: {
     backgroundColor: 'inherit',
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.04)',
+    },
   },
 }));
 
