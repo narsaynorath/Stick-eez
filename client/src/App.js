@@ -8,6 +8,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import NavDrawer from './components/NavDrawer';
 import MainToolbar from './components/MainToolbar';
 
+import MainPage from './components/Main';
+
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -38,13 +43,16 @@ function App() {
 
       <NavDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
 
-      <Switch>
-        <Route path="/" exact component={Main} />
-        <Route path="/starred" component={Starred} />
-        <Route path="/archived" component={Archived} />
-        <Route path="/trash" component={Trash} />
-        <Redirect to="/" />
-      </Switch>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Switch>
+          <Route path="/" exact component={MainPage} />
+          <Route path="/starred" component={Starred} />
+          <Route path="/archived" component={Archived} />
+          <Route path="/trash" component={Trash} />
+          <Redirect to="/" />
+        </Switch>
+      </main>
     </div>
   );
 
@@ -61,42 +69,16 @@ function App() {
   }
 
   // TODO Break these out into components
-  function Main() {
-    return (
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <div className={classes.contentMain}>
-          Some content that is really long so I can make a point
-        </div>
-      </main>
-    );
-  }
-
   function Starred() {
-    return (
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <div className={classes.contentMain}>Starred content!!!</div>
-      </main>
-    );
+    return <div className={classes.contentMain}>Starred content!!!</div>;
   }
 
   function Archived() {
-    return (
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <div className={classes.contentMain}>Archived Content!</div>
-      </main>
-    );
+    return <div className={classes.contentMain}>Archived Content!</div>;
   }
 
   function Trash() {
-    return (
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <div className={classes.contentMain}>Sendit</div>
-      </main>
-    );
+    return <div className={classes.contentMain}>Sendit</div>;
   }
 }
 
