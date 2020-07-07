@@ -2,6 +2,7 @@ import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import DescriptionIcon from '@material-ui/icons/Description';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -29,6 +30,9 @@ const useStyles = makeStyles(theme => ({
     color: 'rgb(244, 181, 6)',
     marginRight: '4px',
   },
+  authenticationActions: {
+    marginLeft: 'auto',
+  },
 }));
 
 const MainToolbar = ({ toggleDrawer }) => {
@@ -44,9 +48,18 @@ const MainToolbar = ({ toggleDrawer }) => {
         </Tooltip>
         <DescriptionIcon className={classes.logo} />
         <Typography variant="h6">Stick-eez</Typography>
+        <div className={classes.authenticationActions}>
+          <Button variant="contained" color="primary" onClick={login}>
+            Login
+          </Button>
+        </div>
       </Toolbar>
     </AppBar>
   );
 };
+
+function login() {
+  alert('Login modal should appear here');
+}
 
 export default MainToolbar;
