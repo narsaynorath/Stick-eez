@@ -7,6 +7,7 @@ from app.models import User
 class Auth(Resource):
     resource_fields = {
         'access_token': fields.String,
+        'username': fields.String
     }
 
     @marshal_with(resource_fields)
@@ -22,4 +23,4 @@ class Auth(Resource):
         user = User.query.filter_by(username=username).first()
         if user.verify_password(password):
             access_token = create_access_token(identity=username)
-            return {'access_token': access_token}
+            return {'access_token': access_token, 'username': username}

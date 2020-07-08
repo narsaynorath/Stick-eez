@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
-function Note({ title = 'A title', text = 'Some content' }) {
+function Note({ id, title = 'A title', text = 'Some content' }) {
   return (
     <Card style={{ height: '100%', width: '100%' }}>
       <CardContent>

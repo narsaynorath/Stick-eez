@@ -10,6 +10,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
+import { removeUserSession } from '../utils/common';
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -35,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const MainToolbar = ({ toggleDrawer }) => {
+const MainToolbar = ({ history, toggleDrawer }) => {
   const classes = useStyles();
 
   return (
@@ -49,17 +51,17 @@ const MainToolbar = ({ toggleDrawer }) => {
         <DescriptionIcon className={classes.logo} />
         <Typography variant="h6">Stick-eez</Typography>
         <div className={classes.authenticationActions}>
-          <Button variant="contained" color="primary" onClick={login}>
-            Login
+          <Button variant="contained" color="primary" onClick={logout}>
+            Logout
           </Button>
         </div>
       </Toolbar>
     </AppBar>
   );
-};
 
-function login() {
-  alert('Login modal should appear here');
-}
+  function logout() {
+    removeUserSession();
+  }
+};
 
 export default MainToolbar;

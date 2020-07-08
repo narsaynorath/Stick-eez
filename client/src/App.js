@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import NavDrawer from './components/NavDrawer';
 import MainToolbar from './components/MainToolbar';
 
 import MainPage from './components/Main';
+import Login from './components/Login';
+
+import { getToken, getUser } from './utils/common';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -35,6 +39,49 @@ function App() {
   const classes = useStyles();
   const [clickedOpen, setClickedOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [notes, setNotes] = useState([]);
+
+  const loggedIn = getUser();
+
+  useEffect(() => {
+    async function fetchNotes() {
+      setLoading(true);
+      fetch('http://localhost:5000/api/v1/notes/', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            setNotes(data);
+          }
+        })
+        .catch(error => {
+          console.error('ERROR making API request');
+        });
+      setLoading(false);
+    }
+
+    fetchNotes();
+  }, []);
+
+  let content;
+  if (loading) {
+    content = <div>Loading...</div>;
+  } else {
+    content = (
+      <Switch>
+        <Route path="/" exact component={() => <MainPage notes={notes} />} />
+        <Route path="/starred" component={Starred} />
+        <Route path="/archived" component={Archived} />
+        <Route path="/trash" component={Trash} />
+        <Redirect to="/" />
+      </Switch>
+    );
+  }
 
   return (
     <div className={classes.root}>
@@ -45,14 +92,12 @@ function App() {
 
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Switch>
-          <Route path="/" exact component={MainPage} />
-          <Route path="/starred" component={Starred} />
-          <Route path="/archived" component={Archived} />
-          <Route path="/trash" component={Trash} />
-          <Redirect to="/" />
-        </Switch>
+        {content}
       </main>
+
+      <Modal open={!loggedIn}>
+        <Login />
+      </Modal>
     </div>
   );
 

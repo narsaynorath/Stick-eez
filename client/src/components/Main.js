@@ -6,23 +6,31 @@ import Note from './Note';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-function Main() {
+function Main({ notes }) {
   // fake a fetch request
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setTimeout(() => setLoaded(true), 2000);
   }, []);
 
-  if (!loaded) {
+  if (!loaded || !notes) {
     return <div>Loading...</div>;
   }
 
+  console.log(notes);
+
+  const lgLayouts = notes.map(({ title }) => {
+    return {
+      i: btoa(title),
+      x: Math.ceil(Math.random() * 12),
+      y: Math.ceil(Math.random() * notes.length),
+      w: Math.ceil(Math.random() * 6),
+      h: Math.ceil(Math.random() * 3),
+    };
+  });
+
   const layouts = {
-    lg: [
-      { i: 'a', x: 0, y: 0, w: 1, h: 2 },
-      { i: 'b', x: 1, y: 0, w: 3, h: 1, minW: 2, maxW: 4 },
-      { i: 'c', x: 4, y: 0, w: 1, h: 2 },
-    ],
+    lg: lgLayouts,
   };
   return (
     <ResponsiveGridLayout
@@ -32,15 +40,11 @@ function Main() {
       cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
       style={{ margin: '32px', height: '100%', background: '#f9f8f8' }}
     >
-      <div key="a">
-        <Note title="Hooblah" text="yaya" />
-      </div>
-      <div key="b">
-        <Note />
-      </div>
-      <div key="c">
-        <Note />
-      </div>
+      {notes.map(({ id, title, text }) => (
+        <div key={btoa(title)}>
+          <Note id={id} title={title} text={text} />
+        </div>
+      ))}
     </ResponsiveGridLayout>
   );
 }
