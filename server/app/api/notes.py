@@ -1,8 +1,8 @@
-from flask import flash, g, redirect, render_template, url_for
-from flask_login import current_user, login_user, logout_user
+from flask import flash
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource, fields, marshal_with, reqparse
 
-from app import api_manager, app, auth, db, models
+from app import db, models
 
 
 class NoteDao:
@@ -22,13 +22,16 @@ class Notes(Resource):
         'text': fields.String
     }
 
-    @auth.login_required
+    # @auth.login_required
+    @jwt_required
     @marshal_with(resource_fields)
     def get(self):
-        notes = models.Note.query.filter_by(author=g.user.id)
+        user = models.User.query.filter_by(username=get_jwt_identity()).first()
+        notes = models.Note.query.filter_by(author=user.id)
         return [NoteDao(n.id, n.author, n.title, n.text) for n in notes]
 
-    @auth.login_required
+    # @auth.login_required
+    @jwt_required
     @marshal_with(resource_fields)
     def post(self):
         parser = reqparse.RequestParser()
@@ -36,7 +39,8 @@ class Notes(Resource):
         parser.add_argument('text')
         args = parser.parse_args()
 
-        new_note = models.Note(author=g.user.id)
+        user = models.User.query.filter_by(username=get_jwt_identity()).first()
+        new_note = models.Note(author=user.id)
         new_note.text = args.get('text', '')
         new_note.title = args.get('title', '')
         db.session.add(new_note)
@@ -53,12 +57,13 @@ class Note(Resource):
         'text': fields.String
     }
 
-    @auth.login_required
+    @jwt_required
     @marshal_with(resource_fields)
     def get(self, id):
-        return models.Note.query.filter_by(id=id).first() # TODO: Handle resource not found && get by??
+        return models.Note.query.filter_by(id=id).first()  # TODO: Handle resource not found && get by??
 
-    @auth.login_required
+    # @auth.login_required
+    @jwt_required
     @marshal_with(resource_fields)
     def patch(self, id):
         parser = reqparse.RequestParser()
@@ -73,7 +78,8 @@ class Note(Resource):
         db.session.commit()
         return note
 
-    @auth.login_required
+    # @auth.login_required
+    @jwt_required
     @marshal_with(resource_fields)
     def delete(self, id):
         note = models.Note.query.filter_by(id=id).first()

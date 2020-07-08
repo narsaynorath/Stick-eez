@@ -7,13 +7,15 @@ from app import db, login
 
 
 @login.user_loader
-def load_user(id):
+def load_user(payload):
     """
     Loader that Flask-Login uses to get a User since it's decoupled from
     knowledge of any database.
     """
-    return User.query.get(int(id))
+    if payload is string:
+        return User.query.get(int(id))
 
+    return User.query.get(payload['identity'])
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
