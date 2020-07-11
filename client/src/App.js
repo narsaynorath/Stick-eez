@@ -12,7 +12,7 @@ import MainToolbar from './components/MainToolbar';
 import MainPage from './components/Main';
 import Login from './components/Login';
 
-import { getToken, removeUserSession } from './utils/common';
+import { getToken, getUser, removeUserSession } from './utils/common';
 import { userContext } from './userContext';
 
 import 'react-grid-layout/css/styles.css';
@@ -42,7 +42,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [notes, setNotes] = useState([]);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(getUser());
 
   useEffect(() => {
     async function fetchNotes() {
