@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 
 import { setUserSession } from '../utils/common';
 
-function Login(props) {
+function Login({ setUser }) {
   const username = useFormInput('');
   const password = useFormInput('');
   const [error, setError] = useState(null);
@@ -28,6 +28,7 @@ function Login(props) {
       .then(data => {
         setLoading(false);
         setUserSession(data.access_token, data.username);
+        setUser(data.username);
       })
       .catch(error => {
         // console.log(error);
@@ -51,6 +52,7 @@ function Login(props) {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        margin: 'auto',
       }}
     >
       Login

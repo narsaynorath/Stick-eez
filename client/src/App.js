@@ -12,7 +12,8 @@ import MainToolbar from './components/MainToolbar';
 import MainPage from './components/Main';
 import Login from './components/Login';
 
-import { getToken, getUser } from './utils/common';
+import { getToken, removeUserSession } from './utils/common';
+import { userContext } from './userContext';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -41,8 +42,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [notes, setNotes] = useState([]);
-
-  const loggedIn = getUser();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     async function fetchNotes() {
@@ -61,12 +61,21 @@ function App() {
         })
         .catch(error => {
           console.error('ERROR making API request');
+          setNotes([]);
         });
       setLoading(false);
     }
 
-    fetchNotes();
-  }, []);
+    if (user) {
+      fetchNotes();
+    }
+  }, [user]);
+
+  const handleLogout = () => {
+    setUser(null);
+    setNotes([]);
+    removeUserSession();
+  };
 
   let content;
   if (loading) {
@@ -84,21 +93,32 @@ function App() {
   }
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <MainToolbar toggleDrawer={toggleDrawer} />
+    <userContext.Provider value={{ user, setUser, handleLogout }}>
+      <div className={classes.root}>
+        <CssBaseline />
+        <userContext.Consumer>
+          {({ handleLogout }) => (
+            <MainToolbar
+              toggleDrawer={toggleDrawer}
+              handleLogout={handleLogout}
+            />
+          )}
+        </userContext.Consumer>
 
-      <NavDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+        <NavDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
 
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        {content}
-      </main>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          {content}
+        </main>
 
-      <Modal open={!loggedIn}>
-        <Login />
-      </Modal>
-    </div>
+        <Modal open={!user}>
+          <userContext.Consumer>
+            {({ setUser }) => <Login setUser={setUser} />}
+          </userContext.Consumer>
+        </Modal>
+      </div>
+    </userContext.Provider>
   );
 
   function toggleDrawer(e) {

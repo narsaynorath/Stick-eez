@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Responsive, WidthProvider } from 'react-grid-layout';
 
@@ -7,18 +7,6 @@ import Note from './Note';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 function Main({ notes }) {
-  // fake a fetch request
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => {
-    setTimeout(() => setLoaded(true), 2000);
-  }, []);
-
-  if (!loaded || !notes) {
-    return <div>Loading...</div>;
-  }
-
-  console.log(notes);
-
   const lgLayouts = notes.map(({ title }) => {
     return {
       i: btoa(title),
