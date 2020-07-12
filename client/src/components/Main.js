@@ -1,39 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Responsive, WidthProvider } from 'react-grid-layout';
+import GridLayout from 'react-grid-layout';
 
 import Note from './Note';
 
-const ResponsiveGridLayout = WidthProvider(Responsive);
-
 function Main({ notes }) {
-  const lgLayouts = notes.map(({ title }) => {
-    return {
-      i: btoa(title),
-      x: Math.ceil(Math.random() * 12),
-      y: Math.ceil(Math.random() * notes.length),
-      w: Math.ceil(Math.random() * 6),
-      h: Math.ceil(Math.random() * 3),
+  const [layout, setLayout] = useState(null);
+
+  let x = 0;
+  let y = 0;
+  const newLayout = notes.map(({ id }) => {
+    const position = {
+      i: `note-${id}`,
+      x,
+      y,
+      w: 1,
+      h: 1,
     };
+
+    x++;
+    y++;
+    if (x >= 6) {
+      x = 0;
+    }
+
+    return position;
   });
 
-  const layouts = {
-    lg: lgLayouts,
-  };
+  if (!layout) {
+    setLayout(newLayout);
+  }
+
   return (
-    <ResponsiveGridLayout
-      className="layout"
-      layouts={layouts}
-      breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-      cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-      style={{ margin: '32px', height: '100%', background: '#f9f8f8' }}
-    >
+    <GridLayout cols={6} width={1200} rowHeight={200} layout={layout}>
       {notes.map(({ id, title, text }) => (
-        <div key={btoa(title)}>
+        <div key={`note-${id}`}>
           <Note id={id} title={title} text={text} />
         </div>
       ))}
-    </ResponsiveGridLayout>
+    </GridLayout>
   );
 }
 

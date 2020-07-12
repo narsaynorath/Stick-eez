@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const MainToolbar = ({ handleLogout, toggleDrawer }) => {
+const MainToolbar = ({ handleLogout, toggleDrawer, user }) => {
   const classes = useStyles();
 
   return (
@@ -47,7 +47,17 @@ const MainToolbar = ({ handleLogout, toggleDrawer }) => {
           </IconButton>
         </Tooltip>
         <DescriptionIcon className={classes.logo} />
-        <Typography variant="h6">Stick-eez</Typography>
+        <Typography variant="h6" style={{ minWidth: 'max-content' }}>
+          Stick-eez
+        </Typography>
+        {user && (
+          <Typography
+            variant="h6"
+            style={{ width: '100%', textAlign: 'center' }}
+          >
+            Welcome, {user.username}!
+          </Typography>
+        )}
         <div className={classes.authenticationActions}>
           <Button
             variant="contained"

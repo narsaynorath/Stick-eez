@@ -5,15 +5,19 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import { ThemeProvider } from '@material-ui/core/styles';
 
 import NavDrawer from './components/NavDrawer';
 import MainToolbar from './components/MainToolbar';
 
-import MainPage from './components/Main';
 import Login from './components/Login';
+import MainPage from './components/Main';
+import NoteForm from './components/NoteForm';
 
 import { getToken, getUser, removeUserSession } from './utils/common';
 import { userContext } from './userContext';
+import { theme } from './theme';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -34,6 +38,12 @@ const useStyles = makeStyles(theme => ({
   contentMain: {
     padding: '32px',
   },
+  newNoteField: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '32px auto 16px auto',
+  },
 }));
 
 function App() {
@@ -42,6 +52,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [notes, setNotes] = useState([]);
+  const [addingNote, setAddingNote] = useState(false);
   const [user, setUser] = useState(getUser());
 
   useEffect(() => {
@@ -82,43 +93,59 @@ function App() {
     content = <div>Loading...</div>;
   } else {
     content = (
-      <Switch>
-        <Route path="/" exact component={() => <MainPage notes={notes} />} />
-        <Route path="/starred" component={Starred} />
-        <Route path="/archived" component={Archived} />
-        <Route path="/trash" component={Trash} />
-        <Redirect to="/" />
-      </Switch>
+      <div>
+        <div className={classes.newNoteField}>
+          {addingNote ? (
+            <NoteForm
+              setAddingNote={setAddingNote}
+              notes={notes}
+              setNotes={setNotes}
+              style={{ maxHeight: 'min-content', maxWidth: '600px' }}
+            />
+          ) : (
+            <TextField
+              variant="outlined"
+              placeholder="Take a note..."
+              onClick={() => setAddingNote(true)}
+              style={{ width: '100%', maxWidth: '600px', background: '#fff' }}
+            />
+          )}
+        </div>
+        <Switch>
+          <Route path="/" exact component={() => <MainPage notes={notes} />} />
+          <Route path="/starred" component={Starred} />
+          <Route path="/archived" component={Archived} />
+          <Route path="/trash" component={Trash} />
+          <Redirect to="/" />
+        </Switch>
+      </div>
     );
   }
 
   return (
-    <userContext.Provider value={{ user, setUser, handleLogout }}>
-      <div className={classes.root}>
-        <CssBaseline />
-        <userContext.Consumer>
-          {({ handleLogout }) => (
-            <MainToolbar
-              toggleDrawer={toggleDrawer}
-              handleLogout={handleLogout}
-            />
-          )}
-        </userContext.Consumer>
+    <ThemeProvider theme={theme}>
+      <userContext.Provider value={{ user, setUser, handleLogout }}>
+        <div className={classes.root}>
+          <CssBaseline />
+          <MainToolbar
+            toggleDrawer={toggleDrawer}
+            user={user}
+            handleLogout={handleLogout}
+          />
 
-        <NavDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+          <NavDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
 
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          {content}
-        </main>
+          <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
+            {content}
+          </main>
 
-        <Modal open={!user}>
-          <userContext.Consumer>
-            {({ setUser }) => <Login setUser={setUser} />}
-          </userContext.Consumer>
-        </Modal>
-      </div>
-    </userContext.Provider>
+          <Modal open={!user}>
+            <Login setUser={setUser} />
+          </Modal>
+        </div>
+      </userContext.Provider>
+    </ThemeProvider>
   );
 
   function toggleDrawer(e) {

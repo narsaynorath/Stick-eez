@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 
+import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
 
 import { setUserSession } from '../utils/common';
+import { useFormInput } from '../utils/form';
+
+import { ReactComponent as LoginSVG } from '../assets/login.svg';
 
 function Login({ setUser }) {
   const username = useFormInput('');
@@ -27,8 +32,8 @@ function Login({ setUser }) {
       .then(response => response.json())
       .then(data => {
         setLoading(false);
-        setUserSession(data.access_token, data.username);
-        setUser(data.username);
+        setUserSession(data.access_token, data.user);
+        setUser(data.user);
       })
       .catch(error => {
         // console.log(error);
@@ -55,47 +60,40 @@ function Login({ setUser }) {
         margin: 'auto',
       }}
     >
-      Login
-      <br />
-      <br />
-      <div>
-        Username
-        <br />
-        <input type="text" {...username} autoComplete="new-password" />
-      </div>
-      <div style={{ marginTop: 10 }}>
-        Password
-        <br />
-        <input type="password" {...password} autoComplete="new-password" />
-      </div>
+      <LoginSVG style={{ margin: '20px' }} />
+      <TextField
+        variant="outlined"
+        type="text"
+        {...username}
+        autoComplete="new-password"
+        label="Username"
+        style={{ marginBottom: '12px' }}
+      />
+      <TextField
+        variant="outlined"
+        type="password"
+        {...password}
+        autoComplete="new-password"
+        label="Password"
+      />
       {error && (
         <>
           <small style={{ color: 'red' }}>{error}</small>
           <br />
         </>
       )}
-      <br />
-      <input
+      <Button
         type="button"
-        value={loading ? 'Loading...' : 'Login'}
+        variant="contained"
+        color="primary"
         onClick={handleLogin}
         disabled={loading}
-      />
-      <br />
+        style={{ margin: '12px' }}
+      >
+        {loading ? 'Loading...' : 'Login'}
+      </Button>
     </Paper>
   );
-}
-
-function useFormInput(initialValue) {
-  const [value, setValue] = useState(initialValue);
-
-  const handleChange = e => {
-    setValue(e.target.value);
-  };
-  return {
-    value,
-    onChange: handleChange,
-  };
 }
 
 export default Login;
