@@ -33,6 +33,3 @@ class Auth(Resource):
                     'username': username
                 }
             }
-
-        # TODO: make this raise the error message properly
-        raise { "message": "Incorrect username or password", "status": 401 }

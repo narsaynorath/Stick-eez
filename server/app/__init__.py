@@ -13,8 +13,6 @@ from dotenv import load_dotenv
 
 from config import Config
 
-from app.api import errors
-
 load_dotenv()
 
 app = Flask(__name__)
