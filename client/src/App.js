@@ -112,7 +112,11 @@ function App() {
           )}
         </div>
         <Switch>
-          <Route path="/" exact component={() => <MainPage notes={notes} />} />
+          <Route
+            path="/"
+            exact
+            component={() => <MainPage user={user} notes={notes} />}
+          />
           <Route path="/starred" component={Starred} />
           <Route path="/archived" component={Archived} />
           <Route path="/trash" component={Trash} />

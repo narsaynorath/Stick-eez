@@ -6,8 +6,12 @@ import Note from './Note';
 
 const GridLayout = WidthProvider(ReactGridLayout);
 
-function Main({ notes }) {
+function Main({ user, notes }) {
   const [layout, setLayout] = useState(null);
+
+  if (!user) {
+    return null;
+  }
 
   let x = 0;
   let y = 0;
@@ -30,7 +34,9 @@ function Main({ notes }) {
   });
 
   if (!layout) {
-    const sessionLayout = JSON.parse(localStorage.getItem('layout'));
+    const sessionLayout = JSON.parse(
+      localStorage.getItem(`layout-${user.username}`)
+    );
     if (sessionLayout && sessionLayout.length) {
       setLayout(sessionLayout);
     } else {
@@ -40,7 +46,10 @@ function Main({ notes }) {
 
   const handleLayoutChange = changedLayout => {
     if (changedLayout.length) {
-      localStorage.setItem('layout', JSON.stringify(changedLayout));
+      localStorage.setItem(
+        `layout-${user.username}`,
+        JSON.stringify(changedLayout)
+      );
     }
   };
 
