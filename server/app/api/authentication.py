@@ -25,7 +25,7 @@ class Auth(Resource):
         password = args.get('password')
 
         user = User.query.filter_by(username=username).first()
-        if user.verify_password(password):
+        if user and user.verify_password(password):
             access_token = create_access_token(identity=username)
             return {
                 'access_token': access_token,
@@ -33,3 +33,6 @@ class Auth(Resource):
                     'username': username
                 }
             }
+
+        # TODO: make this raise the error message properly
+        raise { "message": "Incorrect username or password", "status": 401 }

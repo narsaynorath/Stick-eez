@@ -16,7 +16,9 @@ function Login({ setUser }) {
   const [loading, setLoading] = useState(false);
 
   // handle button click of login form
-  const handleLogin = () => {
+  const handleLogin = e => {
+    e.preventDefault();
+
     setError(null);
     setLoading(true);
     fetch('http://localhost:5000/api/v1/login/', {
@@ -51,8 +53,8 @@ function Login({ setUser }) {
     <Paper
       elevation={0}
       style={{
-        height: '500px',
-        width: '500px',
+        height: '75%',
+        width: '50%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -61,37 +63,41 @@ function Login({ setUser }) {
       }}
     >
       <LoginSVG style={{ margin: '20px' }} />
-      <TextField
-        variant="outlined"
-        type="text"
-        {...username}
-        autoComplete="new-password"
-        label="Username"
-        style={{ marginBottom: '12px' }}
-      />
-      <TextField
-        variant="outlined"
-        type="password"
-        {...password}
-        autoComplete="new-password"
-        label="Password"
-      />
-      {error && (
-        <>
-          <small style={{ color: 'red' }}>{error}</small>
-          <br />
-        </>
-      )}
-      <Button
-        type="button"
-        variant="contained"
-        color="primary"
-        onClick={handleLogin}
-        disabled={loading}
-        style={{ margin: '12px' }}
+      <form
+        style={{ display: 'flex', flexDirection: 'column' }}
+        onSubmit={handleLogin}
       >
-        {loading ? 'Loading...' : 'Login'}
-      </Button>
+        <TextField
+          variant="outlined"
+          type="text"
+          {...username}
+          autoComplete="new-password"
+          label="Username"
+          style={{ marginBottom: '12px' }}
+        />
+        <TextField
+          variant="outlined"
+          type="password"
+          {...password}
+          autoComplete="new-password"
+          label="Password"
+        />
+        {error && (
+          <>
+            <small style={{ color: 'red' }}>{error}</small>
+            <br />
+          </>
+        )}
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          style={{ margin: '12px' }}
+        >
+          {loading ? 'Loading...' : 'Login'}
+        </Button>
+      </form>
     </Paper>
   );
 }
