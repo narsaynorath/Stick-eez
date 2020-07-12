@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 
-import GridLayout from 'react-grid-layout';
+import ReactGridLayout, { WidthProvider } from 'react-grid-layout';
 
 import Note from './Note';
+
+const GridLayout = WidthProvider(ReactGridLayout);
 
 function Main({ notes }) {
   const [layout, setLayout] = useState(null);
@@ -32,7 +34,7 @@ function Main({ notes }) {
   }
 
   return (
-    <GridLayout cols={6} width={1200} rowHeight={200} layout={layout}>
+    <GridLayout cols={6} rowHeight={200} layout={layout}>
       {notes.map(({ id, title, text }) => (
         <div key={`note-${id}`}>
           <Note id={id} title={title} text={text} />
