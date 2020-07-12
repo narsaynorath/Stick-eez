@@ -30,11 +30,27 @@ function Main({ notes }) {
   });
 
   if (!layout) {
-    setLayout(newLayout);
+    const sessionLayout = JSON.parse(localStorage.getItem('layout'));
+    if (sessionLayout && sessionLayout.length) {
+      setLayout(sessionLayout);
+    } else {
+      setLayout(newLayout);
+    }
   }
 
+  const handleLayoutChange = changedLayout => {
+    if (changedLayout.length) {
+      localStorage.setItem('layout', JSON.stringify(changedLayout));
+    }
+  };
+
   return (
-    <GridLayout cols={6} rowHeight={200} layout={layout}>
+    <GridLayout
+      cols={6}
+      rowHeight={200}
+      layout={layout}
+      onLayoutChange={handleLayoutChange}
+    >
       {notes.map(({ id, title, text }) => (
         <div key={`note-${id}`}>
           <Note id={id} title={title} text={text} />
