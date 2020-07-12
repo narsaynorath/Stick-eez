@@ -140,7 +140,7 @@ function App() {
             {content}
           </main>
 
-          <Modal open={!user}>
+          <Modal open={!user} style={{ display: 'flex', alignItems: 'center' }}>
             <Login setUser={setUser} />
           </Modal>
         </div>
